@@ -365,6 +365,35 @@ void search_mcts_cmd(Position& pos, istringstream& is)
     }
   }
 
+// run the following command list line by line
+// see UCI::loop()
+void getline(string &cmd) {
+  const int size=9;
+  static string list[size]={
+    "", 
+   "ucci",
+   "setoption Use_NNUE pure",
+   "setoption EvalFile xiangqi-aa162e1771e5.nnue",
+   "setoption Threads 8",
+   "setoption Hash 512",
+   "setoption UCI_Variant xiangqi",
+   "generate_training_data depth 2 count 10000000"
+   " random_multi_pv 4 random_multi_pv_diff 100"
+   " random_move_count 8 random_move_max_ply 20"
+   " write_min_ply 5 eval_limit 10000"
+   " set_recommended_uci_options data_format bin"
+   " output_file_name xiangqi.bin",
+   "quit"
+  };
+
+  for (int i=0;i<size;i++) {
+    if (cmd==list[i]) {
+      cmd=list[i+1];
+      std::cout << cmd << std::endl;
+      break;
+    }
+  }
+}
 
 /// UCI::loop() waits for a command from stdin, parses it and calls the appropriate
 /// function. Also intercepts EOF from stdin to ensure gracefully exiting if the
@@ -403,8 +432,11 @@ void UCI::loop(int argc, char* argv[]) {
   }
 
   do {
-      if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input or EOF
-          cmd = "quit";
+// instead of using stdin as input, write a new getline() function which will 
+// return a preset list of command to be executed, see the function getline() above
+//      if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input or EOF
+//          cmd = "quit";
+      getline(cmd);
 
       istringstream is(cmd);
 

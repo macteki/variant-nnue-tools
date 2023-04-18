@@ -141,6 +141,7 @@ namespace Stockfish::Tools {
                         output_file_stream->write(*buf);
 
                         sfen_write_count += buf->size();
+                        std::cout << "Progress : " << sfen_write_count << std::endl;
 
                         // Add the processed number here, and if it exceeds save_every,
                         // change the file name and reset this counter.
